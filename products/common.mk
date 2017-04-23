@@ -35,6 +35,14 @@ $(call inherit-product-if-exists, vendor/aquarios/products/bootanimation.mk)
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
 
+# Init file
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/etc/init.local.rc:root/init.aqua.rc
+
+# Don't export PS1 in /system/etc/mkshrc.
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/etc/mkshrc:system/etc/mkshrc
+
 # Init.d script support
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/bin/sysinit:system/bin/sysinit \
