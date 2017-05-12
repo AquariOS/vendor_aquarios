@@ -72,8 +72,7 @@ PRODUCT_PACKAGES += \
     CellBroadcastReceiver \
     Development \
     SpareParts \
-    LockClock \
-    su
+    LockClock
 
 # Optional packages
 PRODUCT_PACKAGES += \
