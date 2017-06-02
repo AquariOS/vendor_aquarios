@@ -233,5 +233,9 @@ endif
 
 $(call prepend-product-if-exists, vendor/extra/product.mk)
 
-# include definitions for SDCLANG
-include device/qcom/common/sdclang/sdclang.mk
+# Include SDCLANG definitions if it is requested and available
+ifeq ($(HOST_OS),linux)
+    ifneq ($(wildcard vendor/qcom/sdclang-3.8/),)
+        include vendor/aquarios/sdclang/sdclang.mk
+    endif
+endif
