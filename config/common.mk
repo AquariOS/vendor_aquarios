@@ -83,5 +83,8 @@ endif
 # Don't compile SystemUITests (Anyway we do not use SystemUI)
 EXCLUDE_SYSTEMUI_TESTS := true
 
+# Disable vendor restrictions
+PRODUCT_RESTRICT_VENDOR_FILES := false
+
 # Vendor/themes
 #$(call inherit-product, vendor/assets/common.mk)
