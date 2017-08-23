@@ -1,0 +1,7 @@
+bootstrap_go_package {
+    name: "soong-aquarios",
+    pkgPath: "aquarios/soong/android",
+    srcs: [
+        "android/variable.go",
+    ],
+}
