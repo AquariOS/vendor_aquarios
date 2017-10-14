@@ -90,8 +90,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Calculator \
     LatinIME \
-    BluetoothExt
-
+    BluetoothExt \
+    Nova \
+    NovaGoogleCompanion
 
 # Extra tools
 PRODUCT_PACKAGES += \
