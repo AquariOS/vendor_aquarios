@@ -92,6 +92,11 @@ ifeq ($(WITH_TWRP),true)
 include vendor/aquarios/config/twrp.mk
 endif
 
+# Charging sounds
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/google/effects/BatteryPlugged.ogg:system/media/audio/ui/BatteryPlugged.ogg \
+    vendor/aquarios/google/effects/BatteryPlugged_48k.ogg:system/media/audio/ui/BatteryPlugged_48k.ogg
+
 # Optional packages
 PRODUCT_PACKAGES += \
     Basic \
@@ -227,3 +232,4 @@ else
 endif
 
 $(call prepend-product-if-exists, vendor/extra/product.mk)
+
