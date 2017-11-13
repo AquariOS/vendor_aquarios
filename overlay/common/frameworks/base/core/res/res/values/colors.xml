@@ -19,7 +19,7 @@
      overlaying new theme colors. -->
 <resources>
 
-    <color name="user_icon_1">#ff1cbcd8</color>
+    <color name="user_icon_1">#ff0da0ba</color>
     <color name="user_icon_2">#ff8fd6e0</color>
     <color name="user_icon_3">#ff3093b5</color>
     <color name="user_icon_4">#ffa6f4c4</color>
@@ -28,4 +28,6 @@
     <color name="user_icon_7">#ffb68fd8</color>
     <color name="user_icon_8">#ff0394ad</color>
 
+    <!-- For date picker widget -->
+    <drawable name="selected_day_background">#ff13aac4</drawable>
 </resources>
