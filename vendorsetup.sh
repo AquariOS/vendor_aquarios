@@ -1,3 +1,3 @@
-. "$(gettop)/vendor/gzosp/build/envsetup.sh"
+. "$(gettop)/vendor/aquarios/build/envsetup.sh"
 
-gzosp_device_combos
+aquarios_device_combos
