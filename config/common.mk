@@ -92,7 +92,8 @@ PRODUCT_PACKAGES += \
     LatinIME \
     BluetoothExt \
     Nova \
-    NovaGoogleCompanion
+    NovaGoogleCompanion \
+    OmniJaws
 
 # Extra tools
 PRODUCT_PACKAGES += \
