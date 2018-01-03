@@ -90,6 +90,10 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/etc/permissions/com.android.providers.weather.xml:system/etc/permissions/com.android.providers.weather.xml \
     vendor/aquarios/prebuilt/etc/default-permissions/com.android.providers.weather.xml:system/etc/default-permissions/com.android.providers.weather.xml
 
+# Clean up packages cache to avoid wrong strings and resources
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/bin/clean_cache.sh:system/bin/clean_cache.sh
+
 # Required packages
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver \
