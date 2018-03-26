@@ -3,3 +3,4 @@ add_lunch_combo bullhead-userdebug
 add_lunch_combo sailfish-userdebug
 add_lunch_combo marlin-userdebug
 add_lunch_combo taimen-userdebug
+add_lunch_combo shamu-userdebug
