@@ -4,7 +4,7 @@
 dir=$ANDROID_BUILD_TOP
 out=$dir/out/target/product
 
-export Changelog=Changelog.txt
+export Changelog.sh=Changelog.txt
 
 if [ -f $Changelog ];
 then
