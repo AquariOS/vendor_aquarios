@@ -99,6 +99,10 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/lib/libsketchology_native.so:system/lib/libsketchology_native.so \
     vendor/aquarios/prebuilt/common/lib64/libsketchology_native.so:system/lib64/libsketchology_native.so
 
+# Power whitelist
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/config/permissions/aquarios-power-whitelist.xml:system/etc/sysconfig/aquarios-power-whitelist.xml
+
 # Required packages
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver \
