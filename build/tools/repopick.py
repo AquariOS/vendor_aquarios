@@ -122,7 +122,7 @@ def fetch_query(remote_url, query):
 
 if __name__ == '__main__':
     # Default to AQUARIOS Gerrit
-    default_gerrit = 'https://review.aquariosgzr.com'
+    default_gerrit = 'https://review.aquarios.net'
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent('''\
         repopick.py is a utility to simplify the process of cherry picking
@@ -364,9 +364,9 @@ if __name__ == '__main__':
                 print('Trying to fetch the change from GitHub')
 
             if args.pull:
-                cmd = ['git pull --no-edit aquarios', item['fetch'][method]['ref']]
+                cmd = ['git pull --no-edit aqua', item['fetch'][method]['ref']]
             else:
-                cmd = ['git fetch aquarios', item['fetch'][method]['ref']]
+                cmd = ['git fetch aqua', item['fetch'][method]['ref']]
             if args.quiet:
                 cmd.append('--quiet')
             result = subprocess.call([' '.join(cmd)], cwd=project_path, shell=True)
