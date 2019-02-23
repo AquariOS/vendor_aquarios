@@ -20,7 +20,8 @@ PRODUCT_PACKAGES += \
     WallpaperPickerGooglePrebuilt \
     Turbo \
     PrebuiltDeskClockGoogle \
-    WeatherClient
+    WeatherClient \
+    OmniStyle
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
