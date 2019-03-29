@@ -85,3 +85,7 @@ EXCLUDE_SYSTEMUI_TESTS := true
 
 # Vendor/themes
 $(call inherit-product, vendor/assets/common.mk)
+
+# AquariOS init file
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/etc/init.aquarios.rc:system/etc/init/init.aquarios.rc
