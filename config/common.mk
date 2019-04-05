@@ -162,7 +162,7 @@ $(call inherit-product, vendor/assets/common.mk)
 # aquarios first version.
 PRODUCT_VERSION_MAJOR = 9
 PRODUCT_VERSION_MINOR = 0
-PRODUCT_VERSION_MAINTENANCE = 0_r34
+PRODUCT_VERSION_MAINTENANCE = 0_r35
 AQUARIOS_POSTFIX := -$(shell date +"%Y%m%d-%H%M")
 ifdef AQUARIOS_BUILD_EXTRA
     AQUARIOS_POSTFIX := -$(AQUARIOS_BUILD_EXTRA)
