@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7bc035f5_392fc51e",
+        "filename": "config/common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2019-04-24T22:25:23Z",
+      "side": 1,
+      "message": "just thought of it, should we add something here to filter OFFICIAL so unofficial doesnt build Updater?",
+      "revId": "fec46d87dbb931f465a612b94529189ec49b8ed8",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": true
+    }
+  ]
+}
