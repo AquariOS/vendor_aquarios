@@ -118,7 +118,8 @@ PRODUCT_PACKAGES += \
     Launcher3Dark \
     Nova \
     WeatherClient \
-    OmniStyle
+    OmniStyle \
+    Updater
 
 
 # Extra tools
