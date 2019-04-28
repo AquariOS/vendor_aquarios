@@ -40,3 +40,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="bullhead-user 8.1.0 OPM6.171019.030.H1 4903069 release-keys"
 
 BUILD_FINGERPRINT := google/bullhead/bullhead:8.1.0/OPM6.171019.030.H1/4903069:user/release-keys
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_WIDTH := 1080

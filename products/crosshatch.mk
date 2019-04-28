@@ -34,3 +34,6 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 
 BUILD_FINGERPRINT := google/crosshatch/crosshatch:9/PQ2A.190405.003/5310204:user/release-keys
 
+# Boot animation
+TARGET_SCREEN_HEIGHT := 2960
+TARGET_SCREEN_WIDTH := 1440

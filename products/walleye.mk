@@ -31,3 +31,8 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="walleye-user 9 PQ2A.190405.003 5310204 release-keys"
 
 BUILD_FINGERPRINT := google/walleye/walleye:9/PQ2A.190405.003/5310204:user/release-keys
+
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_WIDTH := 1080
