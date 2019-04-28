@@ -139,4 +139,7 @@
     <!-- Disable Always On Display by default -->
     <bool name="config_dozeAlwaysOnEnabled">false</bool>
 
+    <!-- Whether or not swipe up gesture (navbar) is available on all supported devices -->
+    <bool name="config_swipe_up_gesture_setting_available">true</bool>
+
 </resources>
