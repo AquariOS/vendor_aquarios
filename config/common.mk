@@ -90,6 +90,11 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/etc/permissions/com.android.providers.weather.xml:system/etc/permissions/com.android.providers.weather.xml \
     vendor/aquarios/prebuilt/etc/default-permissions/com.android.providers.weather.xml:system/etc/default-permissions/com.android.providers.weather.xml
 
+# Markup
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/lib/libsketchology_native.so:system/lib/libsketchology_native.so \
+    vendor/aquarios/prebuilt/common/lib64/libsketchology_native.so:system/lib64/libsketchology_native.so
+
 # Required packages
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver \
@@ -118,7 +123,8 @@ PRODUCT_PACKAGES += \
     Launcher3Dark \
     Nova \
     WeatherClient \
-    OmniStyle
+    OmniStyle \
+    MarkupGoogle
 
 
 # Extra tools
