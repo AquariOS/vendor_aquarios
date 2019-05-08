@@ -94,6 +94,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/bin/clean_cache.sh:system/bin/clean_cache.sh
 
+# Markup
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/lib/libsketchology_native.so:system/lib/libsketchology_native.so \
+    vendor/aquarios/prebuilt/common/lib64/libsketchology_native.so:system/lib64/libsketchology_native.so
+
 # Required packages
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver \
@@ -122,7 +127,8 @@ PRODUCT_PACKAGES += \
     Launcher3Dark \
     Nova \
     WeatherClient \
-    OmniStyle
+    OmniStyle \
+    MarkupGoogle
 
 
 # Extra tools
