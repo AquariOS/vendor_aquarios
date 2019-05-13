@@ -37,10 +37,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/etc/APNs/selective-spn-conf.xml:system/etc/selective-spn-conf.xml
 
-# Sensitive Phone Numbers list
-PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/etc/APNs/sensitive_pn.xml:system/etc/sensitive_pn.xml
-
 # TEMP: Force enable VoLTE/VoWiFi until it's able to be fixed properly
 #PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
    persist.dbg.ims_volte_enable=1 \
