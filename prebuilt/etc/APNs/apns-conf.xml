@@ -9103,18 +9103,6 @@
       profile_id="1"
   />
 
-  <apn carrier="Sprint internet 2"
-      mcc="310" mnc="120"
-      apn="x.ispsn"
-      type="mms,supl,hipri"
-      mmsc="http://mms.sprintpcs.com"
-      mmsproxy="oap7.sprintpcs.com"
-      mmsport="80"
-      protocol="IPV4V6"
-      roaming_protocol="IPV4V6"
-  /> 
-
-
   <!-- this APN will be deleted and replaced by a new ia APN by the HFA provisioning process.
        This is just a bootstrap APN to enable HFA -->
   <apn carrier="OTA"
