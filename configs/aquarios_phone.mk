@@ -26,8 +26,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     net.tethering.noprovisioning=true
 
 # World APN list
-PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/etc/APNs/apns-conf.xml:system/etc/apns-conf.xml
+PRODUCT_PACKAGES += \
+    apns-conf.xml
 
 # World SPN overrides list
 PRODUCT_COPY_FILES += \
