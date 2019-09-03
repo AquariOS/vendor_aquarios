@@ -85,6 +85,9 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit \
     vendor/aquarios/prebuilt/common/bin/sysinit:system/bin/sysinit
 
+# privapp permissions
+    vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-aquarios.xml:system/etc/permissions/privapp-permissions-aquarios.xml
+
 # Weather
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/etc/permissions/com.android.providers.weather.xml:system/etc/permissions/com.android.providers.weather.xml \

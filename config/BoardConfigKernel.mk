@@ -64,10 +64,8 @@ endif
 
 ifeq ($(KERNEL_TOOLCHAIN),)
 KERNEL_TOOLCHAIN_PATH := $(KERNEL_TOOLCHAIN_PREFIX)
-else
-ifneq ($(KERNEL_TOOLCHAIN_PREFIX),)
+else ifneq ($(KERNEL_TOOLCHAIN_PREFIX),)
 KERNEL_TOOLCHAIN_PATH := $(KERNEL_TOOLCHAIN)/$(KERNEL_TOOLCHAIN_PREFIX)
-endif
 endif
 
 ifneq ($(USE_CCACHE),)
@@ -111,4 +109,11 @@ endif
 ifeq ($(HOST_OS),darwin)
   KERNEL_MAKE_FLAGS += C_INCLUDE_PATH=$(BUILD_TOP)/external/elfutils/libelf:/usr/local/opt/openssl/include
   KERNEL_MAKE_FLAGS += LIBRARY_PATH=/usr/local/opt/openssl/lib
+endif
+
+# Set DTBO image locations so the build system knows to build them
+ifeq ($(TARGET_NEEDS_DTBOIMAGE),true)
+BOARD_PREBUILT_DTBOIMAGE ?= $(PRODUCT_OUT)/dtbo/arch/$(KERNEL_ARCH)/boot/dtbo.img
+else ifeq ($(BOARD_KERNEL_SEPARATED_DTBO),true)
+BOARD_PREBUILT_DTBOIMAGE ?= $(PRODUCT_OUT)/dtbo-pre.img
 endif
