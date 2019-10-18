@@ -116,13 +116,10 @@ ifeq ($(KERNEL_ARCH),arm64)
 endif
 
 ifeq ($(HOST_OS),darwin)
-  KERNEL_MAKE_FLAGS += C_INCLUDE_PATH=$(BUILD_TOP)/external/elfutils/libelf:$(BUILD_TOP)/prebuilts/openssl/$(HOST_OS)-x86/1.1.1/include
+  KERNEL_MAKE_FLAGS += HOSTCFLAGS="-I$(BUILD_TOP)/external/elfutils/libelf -I/usr/local/opt/openssl/include -L/usr/local/opt/openssl/lib"
 else
-  KERNEL_MAKE_FLAGS += C_INCLUDE_PATH=$(BUILD_TOP)/prebuilts/openssl/$(HOST_OS)-x86/1.1.1/include
+  KERNEL_MAKE_FLAGS += HOSTCFLAGS="-I/usr/include -I/usr/include/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -L/usr/lib64"
 endif
-KERNEL_MAKE_FLAGS += LIBRARY_PATH=$(BUILD_TOP)/prebuilts/openssl/$(HOST_OS)-x86/1.1.1/lib
-KERNEL_MAKE_FLAGS += HOSTCFLAGS="-L $(BUILD_TOP)/prebuilts/openssl/$(HOST_OS)-x86/1.1.1/lib"
-KERNEL_MAKE_FLAGS += HOSTLDFLAGS="-L $(BUILD_TOP)/prebuilts/openssl/$(HOST_OS)-x86/1.1.1/lib"
 
 ifneq ($(TARGET_KERNEL_ADDITIONAL_FLAGS),)
   KERNEL_MAKE_FLAGS += $(TARGET_KERNEL_ADDITIONAL_FLAGS)
@@ -131,7 +128,7 @@ endif
 TOOLS_PATH_OVERRIDE := \
     PATH=$(BUILD_TOP)/prebuilts/tools-aquarios/$(HOST_OS)-x86/bin:$$PATH \
     LD_LIBRARY_PATH=$(BUILD_TOP)/prebuilts/tools-aquarios/$(HOST_OS)-x86/lib:$$LD_LIBRARY_PATH \
-    PERL5LIB=$(BUILD_TOP)/prebuilts/tools-aquarios/$(HOST_OS)-x86/lib/perl-base
+    PERL5LIB=$(BUILD_TOP)/prebuilts/tools-aquarios/common/perl-base
 
 # Set DTBO image locations so the build system knows to build them
 ifeq ($(TARGET_NEEDS_DTBOIMAGE),true)
