@@ -60,6 +60,10 @@ PRODUCT_COPY_FILES += \
 #PRODUCT_COPY_FILES +=  \
 #    vendor/aquarios/prebuilt/common/sysconfig/dialer_experience.xml:system/etc/sysconfig/dialer_experience.xml
 
+# privapp permissions
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-aqua.xml:system/etc/permissions/privapp-permissions-aqua.xml
+
 # AquariOS-specific startup services
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/etc/init.d/00banner:system/etc/init.d/00banner \
