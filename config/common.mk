@@ -62,7 +62,8 @@ PRODUCT_COPY_FILES += \
 
 # privapp permissions
 PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-aqua.xml:system/etc/permissions/privapp-permissions-aqua.xml
+    vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-aqua.xml:system/etc/permissions/privapp-permissions-aqua.xml \
+    vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-google.xml:system/etc/permissions/privapp-permissions-google.xml
 
 # AquariOS-specific startup services
 PRODUCT_COPY_FILES += \
