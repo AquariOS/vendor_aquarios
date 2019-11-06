@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Copyright (C) 2012-2013, The CyanogenMod Project
-# Copyright (C) 2012-2015, AquariOS Project
+# Copyright (C) 2013 Cybojenix <anthonydking@gmail.com>
+# Copyright (C) 2013 The OmniROM Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,73 +14,134 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
-
-import base64
-import json
-import netrc
 import os
+import os.path
 import sys
-
+import urllib2
+import json
+import re
+from subprocess import Popen, PIPE
+from urllib2 import urlopen, Request
 from xml.etree import ElementTree
 
-try:
-    # For python3
-    import urllib.error
-    import urllib.parse
-    import urllib.request
-except ImportError:
-    # For python2
-    import imp
-    import urllib2
-    import urlparse
-    urllib = imp.new_module('urllib')
-    urllib.error = urllib2
-    urllib.parse = urlparse
-    urllib.request = urllib2
+# Default properties
+DEFAULT_REMOTE = 'github'
+DEFAULT_ORG = 'Aqua-devices'
+DEFAULT_BRANCH = 'x-ng'
+# Dependency file name
+DEPENDENCY_FILE = 'aquarios.dependencies'
+# Where the local manifest path is located
+LOCAL_MANIFEST_PATH = '.repo/local_manifests'
+LOCAL_MANIFEST= LOCAL_MANIFEST_PATH + '/aquarios_manifest.xml'
 
-DEBUG = False
-default_manifest = ".repo/manifest.xml"
+# XML header for local_manifest
+XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
 
-custom_local_manifest = ".repo/local_manifests/aquarios_manifest.xml"
-custom_default_revision = "x-ng"
-custom_dependencies = "aquarios.dependencies"
-org_manifest = "Aqua-devices"  # leave empty if org is provided in manifest
-org_display = "Aqua-devices"  # needed for displaying
+"""
+Regex pattern that can either match:
+- http(s)://github.com/Aqua-devices/device_google_taimen
+- Aqua-devices/device_google_taimen
+if the repository format is different from these examples, the repo gets rejected.
+"""
+REPO_PATTERN = re.compile(r'(?:https?:\/\/www\.)?(?P<remote>\w+)\.\w+\/([\w-]+)\/([\w-]+)$|(^[\w-]+)\/([\w-]+)$')
 
-github_auth = None
+# Colors for formatted print
+BOLD = '\033[1m'
+CPASS = '\033[92m'
+CWARN = '\033[93m'
+CFAIL = '\033[91m'
+CEND = '\033[0m'
 
+# Error message when user exits from processes
+USER_ABORT_MSG = '\nBailing out, process aborted by the user.\n'
+# Documentation for getting a personal access token
+GH_TOKEN_HELP = 'https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line'
 
-local_manifests = '.repo/local_manifests'
-if not os.path.exists(local_manifests):
-    os.makedirs(local_manifests)
+def print_bold(msg):
+    """ Prints in bold """
+    print(BOLD + msg + CEND)
 
+def print_pass(msg):
+    """ Prints with green """
+    print(CPASS + msg + CEND)
 
-def debug(*args, **kwargs):
-    if DEBUG:
-        print(*args, **kwargs)
+def print_warn(msg):
+    """ Prints with yellow """
+    print(CWARN + msg + CEND)
 
+def print_fail(msg):
+    """ Prints with red """
+    print(CFAIL + msg + CEND)
 
-def add_auth(g_req):
-    global github_auth
-    if github_auth is None:
+def color_exit(msg):
+    """ Exits with red output """
+    exit(CFAIL + msg + CEND)
+
+def get_github_token():
+    """ Allows to get the GitHub access token from file """
+    token = ''
+
+    api_file = os.getenv('HOME') + '/api_token'
+
+    if os.path.isfile(api_file):
+        with open(api_file, 'r') as f:
+            token = f.readline().strip()
+            f.close()
+
+    return token
+
+def gather_device_repo(device_name):
+    # Initial page to check
+    page = 1
+    # Access token for GitHub
+    token = get_github_token()
+    while True:
+        req = Request('https://api.github.com/users/%s/repos?page=%d&per_page=100' % (DEFAULT_ORG, page))
+
+        if token:
+            req.add_header('Authorization', 'token %s' % token)
+
         try:
-            auth = netrc.netrc().authenticators("api.github.com")
-        except (netrc.NetrcParseError, IOError):
-            auth = None
-        if auth:
-            github_auth = base64.b64encode(
-                ('%s:%s' % (auth[0], auth[2])).encode()
-            )
-        else:
-            github_auth = ""
-    if github_auth:
-        g_req.add_header("Authorization", "Basic %s" % github_auth)
+            resp = json.loads(urllib2.urlopen(req).read())
+        except urllib2.HTTPError as e:
+            if e.code == 403:
+                color_exit('You were limited by GitHub, create a personal access token and write it inside $HOME/api_token\ncat $HOME/api_token >> <YOUR_API_TOKEN>\nFor more information on access token visit:\n%s' % GH_TOKEN_HELP)
+            elif e.code == 401:
+                color_exit('The GitHub access token you have used is invalid.\n')
+            else:
+                color_exit('%d: %s' % (e.code, e.reason))
+        except urllib2.URLError as e:
+            color_exit(e.reason)
 
+        # If we do not have more items, get out.
+        if not resp:
+            break
 
+        for e in resp:
+            repo_name = e['name']
+            if re.match('device_.*_%s$' % device_name, repo_name):
+                return repo_name
+
+        # We need moar
+        page += 1
+
+    return None
+
+def exists_in_tree(lm, repository):
+    for child in lm.getchildren():
+        if child.attrib['path'].endswith(repository):
+            return child
+    return None
+
+def exists_in_tree_device(lm, repository):
+    for child in lm.getchildren():
+        if child.attrib['name'].endswith(repository):
+            return child
+    return None
+
+# in-place prettyprint formatter
 def indent(elem, level=0):
-    # in-place prettyprint formatter
-    i = "\n" + "  " * level
+    i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
@@ -94,287 +155,213 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
-
-def load_manifest(manifest):
+def get_from_manifest(devicename):
     try:
-        man = ElementTree.parse(manifest).getroot()
-    except (IOError, ElementTree.ParseError):
-        man = ElementTree.Element("manifest")
-    return man
+        lm = ElementTree.parse(LOCAL_MANIFEST)
+        lm = lm.getroot()
+    except:
+        lm = ElementTree.Element('manifest')
 
+    for localpath in lm.findall('project'):
+        if re.search('device_.*_%s$' % device, localpath.get('name')):
+            return localpath.get('path')
 
-def get_default(manifest=None):
-    m = manifest or load_manifest(default_manifest)
-    d = m.findall('default')[0]
-    return d
+    # Devices originally from AOSP are in the main manifest
+    try:
+        mm = ElementTree.parse('.repo/manifest.xml')
+        mm = mm.getroot()
+    except:
+        mm = ElementTree.Element('manifest')
 
+    for localpath in mm.findall("project"):
+        if re.search('device_.*_%s$' % device, localpath.get('name')):
+            return localpath.get('path')
 
-def get_default_revision(manifest=None):
-    r = get_default(manifest=manifest).get('revision')
-    return r.replace('refs/heads/', '').replace('refs/tags/', '')
-
-
-def get_remote(manifest=None, remote_name=None):
-    m = manifest or load_manifest(default_manifest)
-    if not remote_name:
-        remote_name = get_default(manifest=m).get('remote')
-    remotes = m.findall('remote')
-    for remote in remotes:
-        if remote_name == remote.get('name'):
-            return remote
-
-
-def get_revision(manifest=None, p="build"):
-    m = manifest or load_manifest(default_manifest)
-    project = None
-    for proj in m.findall('project'):
-        if proj.get('path').strip('/') == p:
-            project = proj
-            break
-    if project is None:
-        return get_default_revision(manifest=m)
-    revision = project.get('revision')
-    if revision:
-        return revision.replace('refs/heads/', '').replace('refs/tags/', '')
-    remote = get_remote(manifest=m, remote_name=project.get('remote'))
-    revision = remote.get('revision')
-    if not revision:
-        return get_default_revision(manifest=None)
-    return revision.replace('refs/heads/', '').replace('refs/tags/', '')
-
-
-def get_from_manifest(device_name):
-    for man in (custom_local_manifest, default_manifest):
-        man = load_manifest(man)
-        for local_path in man.findall("project"):
-            lp = local_path.get("path").strip('/')
-            if lp.startswith("device/") and lp.endswith("/" + device_name):
-                return lp
     return None
 
+def is_in_manifest(projectname, branch):
+    try:
+        lm = ElementTree.parse(LOCAL_MANIFEST)
+        lm = lm.getroot()
+    except:
+        lm = ElementTree.Element('manifest')
 
-def is_in_manifest(project_path):
-    for man in (custom_local_manifest, default_manifest):
-        man = load_manifest(man)
-        for local_path in man.findall("project"):
-            if local_path.get("path") == project_path:
-                return True
-    return False
+    for localpath in lm.findall('project'):
+        if localpath.get('name') == projectname and localpath.get('revision') == branch:
+            return True
 
+    return None
 
-def add_to_manifest(repos, fallback_branch=None):
-    lm = load_manifest(custom_local_manifest)
+def add_to_manifest(repositories):
+    try:
+        lm = ElementTree.parse(LOCAL_MANIFEST)
+        lm = lm.getroot()
+    except:
+        lm = ElementTree.Element('manifest')
 
-    for repo in repos:
-        repo_name = repo['repository']
-        repo_target = repo['target_path']
-        if is_in_manifest(repo_target):
-            print('already exists: %s' % repo_target)
+    for repo in repositories:
+        org, name, remote = process_repo(repo['repository'])
+
+        if not org:
+            print_fail("Skipping %s as it's not valid, please check its syntax." % repo['repository'])
             continue
 
-        if "/" not in repo_name:
-            repo_name = os.path.join(org_manifest, repo_name)
+        # If we reached here, the repo is valid
+        branch = repo['branch']
+        target = repo['target_path']
 
-        print('Adding dependency: %s -> %s' % (repo_name, repo_target))
+        existing_project = exists_in_tree_device(lm, name)
+        if existing_project != None:
+            if existing_project.attrib['revision'] != branch:
+                print('-- Updating branch for %s/%s to %s' % (org, name, branch))
+                existing_project.set('revision', branch)
+            continue
 
-        project = ElementTree.Element(
-            "project",
-            attrib={"path": repo_target,
-                    "remote": "github",
-                    "name": "%s" % repo_name}
-        )
+        print_pass('-- Adding dependency: %s/%s' % (org, name))
 
-        if 'branch' in repo:
-            project.set('revision', repo['branch'])
-        elif fallback_branch:
-            print("Using branch %s for %s" %
-                  (fallback_branch, repo_name))
-            project.set('revision', fallback_branch)
-        else:
-            print("Using default branch for %s" % repo_name)
+        project = ElementTree.Element('project', attrib = {'path': target,
+            'remote': remote, 'name': org + '/' + name, 'revision': branch})
+
         lm.append(project)
 
-    indent(lm)
-    raw_xml = "\n".join(('<?xml version="1.0" encoding="UTF-8"?>',
-                         ElementTree.tostring(lm).decode()))
+    indent(lm, 0)
+    raw_xml = XML_HEADER + ElementTree.tostring(lm)
 
-    f = open(custom_local_manifest, 'w')
+    # Write on file
+    f = open(LOCAL_MANIFEST, 'w')
     f.write(raw_xml)
     f.close()
 
-_fetch_dep_cache = []
+def fetch_dependencies(repo_path):
+    print_bold('\n- Looking for dependencies..')
 
+    dependencies_path = repo_path + '/' + DEPENDENCY_FILE
 
-def fetch_dependencies(repo_path, fallback_branch=None):
-    global _fetch_dep_cache
-    if repo_path in _fetch_dep_cache:
-        return
-    _fetch_dep_cache.append(repo_path)
-
-    print('Looking for dependencies')
-
-    dep_p = '/'.join((repo_path, custom_dependencies))
-    if os.path.exists(dep_p):
-        with open(dep_p) as dep_f:
-            dependencies = json.load(dep_f)
-    else:
-        dependencies = {}
-        debug('Dependencies file not found, bailing out.')
-
-    fetch_list = []
+    # List containing only the target_path(s), i.e: 'vendor/google'
     syncable_repos = []
+    if os.path.exists(dependencies_path):
+        # Load up *.dependencies
+        dependencies = None
+        with open(dependencies_path, 'r') as dep_file:
+            dependencies = json.loads(dep_file.read())
+            dep_file.close()
 
-    for dependency in dependencies:
-        if not is_in_manifest(dependency['target_path']):
-            if not dependency.get('branch'):
-                dependency['branch'] = (get_revision() or
-                                        custom_default_revision)
+        if len(dependencies) == 0:
+            color_exit('%s exists but it is empty.' % DEPENDENCY_FILE)
 
-            fetch_list.append(dependency)
-            syncable_repos.append(dependency['target_path'])
+        # List containing the repositories to be added inside LOCAL_MANIFEST
+        fetch_list = []
+        for dep in dependencies:
+            org, name, remote = process_repo(dep['repository'])
 
-    if fetch_list:
-        print('Adding dependencies to manifest')
-        add_to_manifest(fetch_list, fallback_branch)
+            # If it's not a valid entry (regex fails)
+            if not org:
+                print_warn("Skipping %s as it's not valid.\nPlease check its syntax in %s." % (dep['repository'], DEPENDENCY_FILE))
+                continue
 
-    if syncable_repos:
-        print('Syncing dependencies')
-        os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
+            # If the dependency is not inside the LOCAL_MANIFEST
+            if not is_in_manifest(org + '/' + name, dep['branch']):
+                fetch_list.append(dep)
 
-    for deprepo in syncable_repos:
-        fetch_dependencies(deprepo)
+            # If the repository doesn't exist, append it to the syncable repos
+            if not os.path.exists(dep['target_path']):
+                syncable_repos.append(dep['target_path'])
 
+        # If new manifest entries have to be added
+        if fetch_list:
+            print_bold('\n- Adding dependencies to local manifest..')
+            add_to_manifest(fetch_list)
 
-def has_branch(branches, revision):
-    return revision in (branch['name'] for branch in branches)
+        # Synchronise repos
+        if syncable_repos:
+            print_bold('\n- Syncing dependencies..')
+            sync_repos(syncable_repos)
 
+    else:
+        color_exit('Dependencies file not found, bailing out.')
 
-def detect_revision(repo):
-    """
-    returns None if using the default revision, else return
-    the branch name if using a different revision
-    """
-    print("Checking branch info")
-    githubreq = urllib.request.Request(
-        repo['branches_url'].replace('{/branch}', ''))
-    add_auth(githubreq)
-    result = json.loads(urllib.request.urlopen(githubreq).read().decode())
+def process_repo(repo):
+    # Apply regex
+    m = re.match(REPO_PATTERN, repo)
+    # Initializing elements
+    org = name = remote = None
 
-    calc_revision = get_revision()
-    default_revision = get_default_revision()
-    print("Calculated revision: %s" % calc_revision)
-    print("Default revision: %s" % default_revision)
+    # Fill elements with splitted values
+    if (m):
+        if m.group('remote'):
+            org = m.group(2)
+            name = m.group(3)
+            remote = m.group('remote')
+        else:
+            org = m.group(4)
+            name = m.group(5)
+            remote = DEFAULT_REMOTE
 
+    return (org, name, remote)
 
-    if calc_revision != default_revision and has_branch(result, calc_revision):
-        return calc_revision
-    if has_branch(result, default_revision):
-        return None
-
-    # Try tags, too, since that's what releases use
-    githubreq = urllib.request.Request(
-        repo['tags_url'].replace('{/tag}', ''))
-    add_auth(githubreq)
-    result.extend(json.loads(
-        urllib.request.urlopen(githubreq).read().decode()))
-
-    if calc_revision != default_revision and has_branch(result, calc_revision):
-        return calc_revision
-    if has_branch(result, default_revision):
-        return None
-
-    fallbacks = os.getenv('ROOMSERVICE_BRANCHES', '').split()
-    for fallback in fallbacks:
-        if has_branch(result, fallback):
-            print("Using fallback branch: %s" % fallback)
-            return fallback
-
-    if has_branch(result, custom_default_revision):
-        print("Falling back to custom revision: %s"
-              % custom_default_revision)
-        return custom_default_revision
-
-    print("Default revision %s not found in %s. Bailing." %
-          (default_revision, repo['name']))
-    print("Branches found:")
-    for branch in result:
-        print(branch['name'])
-    print("Use the ROOMSERVICE_BRANCHES environment variable to "
-          "specify a list of fallback branches.")
-    sys.exit()
-
-
-def main():
-    global DEBUG
+def sync_repos(repos):
     try:
-        depsonly = bool(sys.argv[2] in ['true', 1])
-    except IndexError:
-        depsonly = False
+        # If it's a list, we need to unpack it
+        if type(repos) == list:
+            p = Popen(['repo', 'sync'] + repos)
+        else:
+            p = Popen(['repo', 'sync', repos])
 
-    if os.getenv('ROOMSERVICE_DEBUG'):
-        DEBUG = True
+        out, err = p.communicate()
+    except KeyboardInterrupt:
+        color_exit(USER_ABORT_MSG)
 
+if __name__ == "__main__":
+    print_bold('\n~ Welcome to roomservice, setting up device\n')
+
+    # Target to build
     product = sys.argv[1]
-    device = product[product.find("_") + 1:] or product
 
-    if depsonly:
+    # If the target is i.e aqua_taimen, we just need to get taimen
+    try:
+        device = product[product.index("_") + 1:]
+    except ValueError:
+        color_exit("The target you entered wouldn't work, use instead aqua_{0}\n".format(product))
+
+    # Whether we need to just fetch dependencies or not
+    if len(sys.argv) > 2:
+        depsonly = sys.argv[2]
+    else:
+        depsonly = None
+
+    # Setting up local_manifests folder
+    if not os.path.exists(LOCAL_MANIFEST_PATH):
+        os.makedirs(LOCAL_MANIFEST_PATH)
+
+    # If the device lunched doesn't exist in a local directory, try to sync it from the remote repo
+    if not depsonly:
+        print_warn('Device not found in local repositories.\nAttempting to retrieve it from %s..' % DEFAULT_ORG)
+
+        # Construct Organisation/device_<product>_<device> string
+        device_repo = gather_device_repo(device)
+
+        if device_repo:
+                print_pass('Device repository exists on remote, preparing synchronization..')
+
+                # product can be get from device_repo by splitting
+                product = device_repo.split('_')[2]
+                # Target path
+                repo_path = 'device/%s/%s' % (product, device)
+
+                print_bold('\n- Adding device to local manifest..')
+                add_to_manifest([{'repository': DEFAULT_ORG + '/' + device_repo, 'target_path': repo_path,'branch': DEFAULT_BRANCH}])
+
+                print_bold('\n- Syncing device tree..')
+                sync_repos(repo_path)
+
+                # Fetch dependencies
+                fetch_dependencies(repo_path)
+        else:
+            # Repo not found
+            print_fail('\nRepository for %s not found in the Aqua-devices Github repository list.\nIf this is in error, you may need to manually add it to the %s\n' % (device, LOCAL_MANIFEST_PATH))
+    else:
         repo_path = get_from_manifest(device)
         if repo_path:
             fetch_dependencies(repo_path)
         else:
-            print("Trying dependencies-only mode on a"
-                  "non-existing device tree?")
-        sys.exit()
-
-    print("Device {0} not found. Attempting to retrieve device repository from "
-          "{1} Github (http://github.com/{1}).".format(device, org_display))
-
-    githubreq = urllib.request.Request(
-        "https://api.github.com/search/repositories?"
-        "q={0}+user:{1}+in:name+fork:true".format(device, org_display))
-    add_auth(githubreq)
-
-    repositories = []
-
-    try:
-        result = json.loads(urllib.request.urlopen(githubreq).read().decode())
-    except urllib.error.URLError:
-        print("Failed to search GitHub")
-        sys.exit()
-    except ValueError:
-        print("Failed to parse return data from GitHub")
-        sys.exit()
-    for res in result.get('items', []):
-        repositories.append(res)
-
-    for repository in repositories:
-        repo_name = repository['name']
-
-        if not (repo_name.startswith("device_") and
-                repo_name.endswith("_" + device)):
-            continue
-        print("Found repository: %s" % repository['name'])
-
-        fallback_branch = detect_revision(repository)
-        manufacturer = repo_name[7:-(len(device)+1)]
-        repo_path = "device/%s/%s" % (manufacturer, device)
-        adding = [{'repository': repo_name, 'target_path': repo_path}]
-
-        if not is_in_manifest(repo_path):
-            add_to_manifest(adding, fallback_branch)
-
-            print("Syncing repository to retrieve project.")
-            os.system('repo sync --force-sync %s' % repo_path)
-            print("Repository synced!")
-
-        fetch_dependencies(repo_path, fallback_branch)
-        print("Done")
-        sys.exit()
-
-    print("Repository for %s not found in the %s Github repository list."
-          % (device, org_display))
-    print("If this is in error, you may need to manually add it to your "
-          "%s" % custom_local_manifest)
-
-if __name__ == "__main__":
-    main()
+            print_fail('Trying dependencies-only mode on a non-existing device tree?\n')
