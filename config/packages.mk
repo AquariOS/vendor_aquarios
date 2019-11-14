@@ -14,6 +14,8 @@
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
+    LatinIMEGooglePrebuilt \
+    SoundPickerPrebuilt \
     libprotobuf-cpp-full \
     librsjni
 
