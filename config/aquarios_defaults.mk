@@ -13,6 +13,9 @@
 # limitations under the License.
 
 # AquariOS build type
+BUILD_DATE := $(shell date +%m.%d.%Y)
+BUILD_TIME := $(shell date +%H%M)
+
 ifndef AQUARIOS_BUILD_TYPE
     AQUARIOS_BUILD_TYPE := UNOFFICIAL
 endif
@@ -20,7 +23,8 @@ endif
 TARGET_PRODUCT_SHORT := $(subst aqua_,,$(AQUARIOS_BUILD_TYPE))
 
 # AquariOS build naming
-AQUARIOS_VERSION := $(PLATFORM_VERSION)_$(AQUARIOS_BUILD_TYPE)_$(shell date +%m.%d.%Y-%H%M)
+AQUARIOS_VERSION := $(PLATFORM_VERSION)_$(AQUARIOS_BUILD_TYPE)_$(BUILD_DATE)-$(BUILD_TIME)
+AQUA_BUILD := true 
 ROM_FINGERPRINT := AquariOS/$(PLATFORM_VERSION)/$(TARGET_PRODUCT_SHORT)/$(shell date -u +%H%M)
 
 # AquariOS build properties
