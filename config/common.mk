@@ -187,3 +187,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 include vendor/aquarios/google/GoogleAudio.mk
 
 EXTENDED_POST_PROCESS_PROPS := vendor/aquarios/tools/aquarios_process_props.py
+
+# Vendor/themes
+$(call inherit-product, vendor/assets/common.mk)
