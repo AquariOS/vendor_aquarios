@@ -1,6 +1,6 @@
 . "$(gettop)/vendor/extras/build/envsetup.sh"
 
-aosp_devices=('blueline' 'bonito' 'crosshatch' 'marlin' 'taimen' 'walleye')
+aosp_devices=('blueline' 'bonito' 'crosshatch' 'marlin' 'coral')
 caf_devices=('oneplus3' 'enchilada' 'cheeseburger' 'dumpling' 'fajita')
 
 function lunch_devices() {
