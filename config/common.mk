@@ -87,4 +87,4 @@ EXCLUDE_SYSTEMUI_TESTS := true
 PRODUCT_RESTRICT_VENDOR_FILES := false
 
 # Vendor/themes
-#$(call inherit-product, vendor/assets/common.mk)
+$(call inherit-product, vendor/assets/common.mk)
