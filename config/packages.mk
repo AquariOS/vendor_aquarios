@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Main Required Packages
-PRODUCT_PACKAGES += \
-    Launcher3 \
-    LiveWallpapersPicker
-
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
     libprotobuf-cpp-full \
@@ -25,3 +20,8 @@ PRODUCT_PACKAGES += \
 # AdBlocking
 PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/etc/hosts/hosts:system/etc/hosts
+
+# Extra Shared Packages
+PRODUCT_PACKAGES += \
+    Launcher3 \
+    LiveWallpapersPicker
