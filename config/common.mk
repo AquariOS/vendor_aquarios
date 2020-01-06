@@ -22,8 +22,6 @@ DEVICE_PACKAGE_OVERLAYS += \
 # Include some other segments
 include vendor/aquarios/config/aquarios_defaults.mk
 include vendor/aquarios/config/packages.mk
-include vendor/aquarios/config/permissions.mk
-include vendor/aquarios/config/system_fixes.mk
 
 # Proprietary latinIME libs needed for keyboard swype gestures
 ifneq ($(filter shamu,$(TARGET_PRODUCT)),)
@@ -58,19 +56,6 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.build.selinux=1
 
-# Don't export PS1 in /system/etc/mkshrc.
-PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/root/mkshrc:system/etc/mkshrc
-
-# Disable Rescue Party for all except on ENG builds
-ifeq ($(TARGET_BUILD_VARIANT),eng)
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    persist.sys.disable_rescue=0
-else
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    persist.sys.disable_rescue=1
-endif
-
 # Disable ADB security for all except on ENG builds
 ifeq ($(TARGET_BUILD_VARIANT),eng)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
@@ -86,5 +71,10 @@ EXCLUDE_SYSTEMUI_TESTS := true
 # Disable vendor restrictions
 PRODUCT_RESTRICT_VENDOR_FILES := false
 
+# Include librsjni explicitly to workaround GMS issue
+PRODUCT_PACKAGES += \
+    librsjni
+
 # Vendor/themes
 $(call inherit-product, vendor/assets/common.mk)
+$(call inherit-product, vendor/aquarios/config/permissions.mk)

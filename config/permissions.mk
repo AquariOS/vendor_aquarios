@@ -12,3 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#TEMP: spoonfeeding to fix paths
+ifneq ($(filter crosshatch aqua_crosshatch,$(TARGET_PRODUCT)),)
+include device/google/crosshatch/device-crosshatch.mk
+endif
+
+#TEMP: spoonfeeding to fix paths
+#ifneq ($(filter blueline aqua_blueline,$(TARGET_PRODUCT)),)
+#include device/google/blueline/aquarios.mk
+#endif

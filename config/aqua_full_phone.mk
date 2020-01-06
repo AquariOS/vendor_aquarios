@@ -43,7 +43,7 @@ PRODUCT_COPY_FILES += \
 
 # TEMP: Force enable VoLTE/VoWiFi until it's able to be fixed properly
 #PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-   persist.dbg.ims_volte_enable=1 \
-   persist.dbg.volte_avail_ovr=1 \
-   persist.radio.calls.on.ims=1 \
-   persist.radio.rat_on=combine
+#  persist.dbg.ims_volte_enable=1 \
+#  persist.dbg.volte_avail_ovr=1 \
+#  persist.radio.calls.on.ims=1 \
+#  persist.radio.rat_on=combine
