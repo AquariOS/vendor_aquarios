@@ -24,17 +24,6 @@ include vendor/aquarios/config/aquarios_defaults.mk
 include vendor/aquarios/config/packages.mk
 include vendor/aquarios/config/permissions.mk
 
-# Proprietary latinIME libs needed for keyboard swype gestures
-ifneq ($(filter shamu,$(TARGET_PRODUCT)),)
-PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/lib/libjni_latinime.so:system/lib/libjni_latinime.so \
-    vendor/aquarios/prebuilt/lib/libjni_latinimegoogle.so:system/lib/libjni_latinimegoogle.so
-else
-PRODUCT_COPY_FILES += \
-    vendor/aquarios/prebuilt/lib64/libjni_latinime.so:system/lib64/libjni_latinime.so \
-    vendor/aquarios/prebuilt/lib64/libjni_latinimegoogle.so:system/lib64/libjni_latinimegoogle.so
-endif
-
 # Google property overides
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     keyguard.no_require_sim=true \
