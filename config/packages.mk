@@ -15,6 +15,7 @@
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
     LatinIMEGooglePrebuilt \
+    NexusLauncherRelease \
     SoundPickerPrebuilt \
     libprotobuf-cpp-full \
     librsjni
