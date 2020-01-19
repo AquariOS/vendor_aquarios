@@ -68,6 +68,10 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-gzr.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-gzr.xml \
     vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-google.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-google.xml
 
+# SmartAction resources
+PRODUCT_PACKAGES += \
+    SmartActions
+
 # Fonts
 PRODUCT_PACKAGES += \
     FontArbutusSourceOverlay \
