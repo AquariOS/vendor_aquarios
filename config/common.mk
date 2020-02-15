@@ -158,6 +158,11 @@ PRODUCT_PACKAGES += \
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += vendor/aquarios/overlay/common
 
+# Show hardware keys category for supported devices only
+ifneq ($(filter dumpling cheeseburger oneplus3,$(TARGET_DEVICE)),)
+DEVICE_PACKAGE_OVERLAYS += vendor/aquarios/overlay/device
+endif
+
 # Versioning System
 # aquarios first version.
 PRODUCT_VERSION_MAJOR = X
