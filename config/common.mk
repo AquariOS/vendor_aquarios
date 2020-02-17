@@ -40,7 +40,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.sys.wfd.virtual=0 \
     ro.setupwizard.rotation_locked=true \
     ro.actionable_compatible_property.enabled=false \
-    ro.com.google.ime.theme_id=5
+    ro.com.google.ime.theme_id=5 \
+    ro.storage_manager.enabled=true
 
 # Security Enhanced Linux
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
