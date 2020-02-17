@@ -67,4 +67,4 @@ PRODUCT_PACKAGES += \
     librsjni
 
 # Vendor/themes
-$(call inherit-product, vendor/assets/common.mk)
+$(call inherit-product, vendor/assets/config/common.mk)
