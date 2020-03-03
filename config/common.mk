@@ -68,18 +68,6 @@ PRODUCT_COPY_FILES += \
     vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-gzr.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-gzr.xml \
     vendor/aquarios/prebuilt/common/etc/permissions/privapp-permissions-google.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-google.xml
 
-# Fonts
-PRODUCT_PACKAGES += \
-    FontArbutusSourceOverlay \
-    FontArvoLatoOverlay \
-    FontRubikRubikOverlay \
-    FontGoogleSansOverlay \
-
--include vendor/aquarios/config/fonts.mk
-
-PRODUCT_PACKAGES += \
-     OverlayStub
-
 # Power whitelist
 PRODUCT_COPY_FILES += \
     vendor/aquarios/config/permissions/aquarios-power-whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/aquarios-power-whitelist.xml
@@ -96,8 +84,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Basic \
     LiveWallpapersPicker \
-    PhaseBeam \
-    ThemePicker
+    PhaseBeam
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
@@ -118,7 +105,6 @@ PRODUCT_PACKAGES += \
     BluetoothExt \
     Launcher3Dark
 
-
 # Extra tools
 PRODUCT_PACKAGES += \
     openvpn \
@@ -129,10 +115,6 @@ PRODUCT_PACKAGES += \
     mkfs.exfat \
     ntfsfix \
     ntfs-3g
-
-
-PRODUCT_PACKAGES += \
-    charger_res_images
 
 # Stagefright FFMPEG plugin
 PRODUCT_PACKAGES += \
@@ -147,13 +129,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Storage manager
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.storage_manager.enabled=true
-
-# easy way to extend to add more packages
--include vendor/extra/product.mk
-
-PRODUCT_PACKAGES += \
-    AndroidDarkThemeOverlay \
-    SettingsDarkThemeOverlay
 
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += vendor/aquarios/overlay/common
@@ -187,9 +162,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.aquarios.version=$(AQUARIOS_VERSION) \
     ro.modversion=$(AQUARIOS_MOD_VERSION) \
     ro.aquarios.buildtype=$(AQUARIOS_BUILD_TYPE)
-
-# Google sounds
-include vendor/aquarios/google/GoogleAudio.mk
 
 EXTENDED_POST_PROCESS_PROPS := vendor/aquarios/tools/aquarios_process_props.py
 
