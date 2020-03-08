@@ -40,7 +40,7 @@ except ImportError:
     urllib.request = urllib2
 
 DEBUG = False
-default_manifest = ".repo/manifest.xml"
+default_manifest = ".repo/manifests/default.xml"
 
 custom_local_manifest = ".repo/local_manifests/aquarios_manifest.xml"
 custom_default_revision = "x-ng"
