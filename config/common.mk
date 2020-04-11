@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include overlays
-DEVICE_PACKAGE_OVERLAYS += \
-   vendor/aquarios/overlay/common
-
-#PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-#   vendor/aquarios/overlay/common
-
 # Include some other segments
 include vendor/aquarios/config/aquarios_defaults.mk
 include vendor/aquarios/config/packages.mk
