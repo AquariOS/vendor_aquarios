@@ -15,5 +15,5 @@
      limitations under the License.
 -->
 <resources>
-    <string name="metadata_sync_pacakge">com.google.android.gms</string>
+    <string name="metadata_sync_package">com.google.android.gms</string>
 </resources>

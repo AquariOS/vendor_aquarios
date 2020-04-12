@@ -20,88 +20,13 @@
     <string name="config_appsAuthorizedForSharedAccounts">;com.android.vending;com.android.settings;</string>
     <string name="config_persistentDataPackageName">com.google.android.gms</string>
 
-    <!-- default dnd acess packages -->
-    <string name="config_defaultDndAccessPackages">com.google.android.GoogleCamera</string>
-
-    <string-array name="config_locationProviderPackageNames" translatable="false">
-        <!-- The standard AOSP fused location provider -->
-        <item>com.android.location.fused</item>
-        <!-- The Google provider -->
-        <item>com.google.android.gms</item>
-    </string-array>
-
     <string name="config_mms_user_agent">"Android-Mms/2.0"</string>
     <string name="config_mms_user_agent_profile_url">http://www.google.com/oha/rdf/ua-profile-kila.xml</string>
-
-    <!-- Disable stock OTA components if installed -->
-    <string-array name="config_disabledComponents" translatable="false">
-        <item>com.google.android.gsf/com.google.android.gsf.update.SystemUpdateActivity</item>
-        <item>com.google.android.gsf/com.google.android.gsf.update.SystemUpdateService$Receiver</item>
-        <item>com.google.android.gsf/com.google.android.gsf.update.SystemUpdateService$SecretCodeReceiver</item>
-        <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateActivity</item>
-        <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateService$Receiver</item>
-        <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateService$ActiveReceiver</item>
-        <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateService$SecretCodeReceiver</item>
-    </string-array>
-
-    <!-- Force enabling of some services that could have been previously disabled -->
-    <string-array name="config_forceEnabledComponents" translatable="false">
-        <item>com.google.android.gsf/com.google.android.gsf.update.SystemUpdateService</item>
-        <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateService</item>
-   </string-array>
-
-    <!-- Automatic power profile management per app.
-         Each item should list the fully-qualified activity
-         name and the power profile id, separated by a comma. >
-    <string-array name="config_auto_perf_activities" translatable="false">
-        <item>com.aurorasoftworks.quadrant.*BenchmarkExecutionActivity,2</item>
-        <item>com.antutu.ABenchMark.*,2</item>
-        <item>.*com.antutu.benchmark.*,2</item>
-    </string-array -->
-
-    <!-- Set this to true to enable the platform's auto-power-save modes like doze and
-         app standby.  These are not enabled by default because they require a standard
-         cloud-to-device messaging service for apps to interact correctly with the modes
-         (such as to be able to deliver an instant message to the device even when it is
-         dozing).  This should be enabled if you have such services and expect apps to
-         correctly use them when installed on your device.  Otherwise, keep this disabled
-         so that applications can still use their own mechanisms. -->
-    <bool name="config_enableAutoPowerModes">true</bool>
-
-    <!-- non blockable notification packages -->
-    <string-array name="config_nonBlockableNotificationPackages">
-        <item>com.android.dialer</item>
-        <item>com.google.android.dialer</item>
-        <item>com.google.android.deskclock</item>
-    </string-array>
 
     <!-- empheral resolver packages -->
     <string-array name="config_ephemeralResolverPackage">
         <item>com.google.android.gms</item>
     </string-array>
 
-    <!-- Night display  -->
-    <!-- Boolean indicating whether the HWC setColorTransform function can be performed efficiently
-         in hardware for individual layers. -->
-    <bool name="config_setColorTransformAcceleratedPerLayer">false</bool>
-
-    <!-- Control whether Night display is available. This should only be enabled on devices
-         that have a HWC implementation that can apply the matrix passed to setColorTransform
-         without impacting power, performance, and app compatibility (e.g. protected content). -->
-    <bool name="config_nightDisplayAvailable">true</bool>
-
-    <!-- Whether WiFi display is supported by this device.
-         There are many prerequisites for this feature to work correctly.
-         Here are a few of them:
-         * The WiFi radio must support WiFi P2P.
-         * The WiFi radio must support concurrent connections to the WiFi display and
-           to an access point.
-         * The Audio Flinger audio_policy.conf file must specify a rule for the "r_submix"
-           remote submix module.  This module is used to record and stream system
-           audio output to the WiFi display encoder in the media server.
-         * The remote submix module "audio.r_submix.default" must be installed on the device.
-         * The device must be provisioned with HDCP keys (for protected content).
-    -->
-    <bool name="config_enableWifiDisplay">true</bool>
 </resources>
 
