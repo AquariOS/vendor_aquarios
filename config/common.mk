@@ -130,6 +130,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.storage_manager.enabled=true
 
+# Ad-blocking
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/etc/hosts.adaway_adblock:system/etc/hosts.adaway_adblock
+
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += vendor/aquarios/overlay/common
 
