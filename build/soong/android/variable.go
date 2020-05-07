@@ -9,6 +9,7 @@ type Product_variables struct {
 	Bootloader_message_offset struct {
 		Cflags []string
 	}
+<<<<<<< HEAD
 	Supports_hw_fde struct {
 		Cflags []string
 		Header_libs []string
@@ -73,6 +74,9 @@ type Product_variables struct {
 		Header_libs []string
 		Shared_libs []string
 	}
+	Recovery_skip_ev_rel_input struct {
+		Cflags []string
+	}
 }
 
 type ProductVariables struct {
@@ -97,4 +101,5 @@ type ProductVariables struct {
 	Uses_qcom_um_4_4_family  *bool `json:",omitempty"`
 	Uses_qcom_um_4_9_family  *bool `json:",omitempty"`
 	Uses_qcom_um_4_14_family  *bool `json:",omitempty"`
+	Recovery_skip_ev_rel_input  *bool `json:",omitempty"`
 }
