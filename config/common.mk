@@ -17,6 +17,14 @@ include vendor/aquarios/config/aquarios_defaults.mk
 include vendor/aquarios/config/packages.mk
 include vendor/aquarios/config/permissions.mk
 
+ifeq ($(AB_OTA_UPDATER),true)
+PRODUCT_COPY_FILES += \
+    vendor/aquarios/prebuilt/common/bin/50-aqua.sh:$(TARGET_COPY_OUT_SYSTEM)/addon.d/50-aquarios.sh \
+    vendor/aquarios/prebuilt/common/bin/backuptool_ab.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.sh \
+    vendor/aquarios/prebuilt/common/bin/backuptool_ab.functions:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.functions \
+    vendor/aquarios/prebuilt/common/bin/backuptool_postinstall.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_postinstall.sh
+endif
+
 # Google property overides
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     keyguard.no_require_sim=true \
