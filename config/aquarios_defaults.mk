@@ -30,6 +30,7 @@ ROM_FINGERPRINT := AquariOS/$(PLATFORM_VERSION)/$(TARGET_PRODUCT_SHORT)/$(shell 
 # AquariOS build properties
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.aquarios.version=$(AQUARIOS_VERSION) \
+    ro.aqua.version=X \
     ro.aquarios.type=$(AQUARIOS_BUILD_TYPE) \
     ro.aqua.fingerprint=$(ROM_FINGERPRINT)
 
