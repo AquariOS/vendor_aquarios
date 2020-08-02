@@ -159,7 +159,7 @@ AQUARIOS_MOD_VERSION := AquariOS-$(AQUARIOS_BUILD)-$(PRODUCT_VERSION_MAJOR)-$(AQ
 PRODUCT_PROPERTY_OVERRIDES += \
     BUILD_DISPLAY_ID=$(BUILD_ID) \
     aquarios.ota.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(PRODUCT_VERSION_MAINTENANCE) \
-    ro.aquarios.version=$(AQUARIOS_VERSION) \
+    ro.aquarios.version=x \
     ro.modversion=$(AQUARIOS_MOD_VERSION) \
     ro.aquarios.buildtype=$(AQUARIOS_BUILD_TYPE)
 

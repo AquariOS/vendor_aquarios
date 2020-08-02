@@ -9,7 +9,6 @@ type Product_variables struct {
 	Bootloader_message_offset struct {
 		Cflags []string
 	}
-<<<<<<< HEAD
 	Supports_hw_fde struct {
 		Cflags []string
 		Header_libs []string
